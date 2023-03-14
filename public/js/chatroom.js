@@ -1,5 +1,5 @@
 (function connect() {
-    let socket = io.connect("http://localhost:3000");
+    let socket = io.connect("http://localhost:4000");
 
     let username = document.getElementById("username");
     let usernameBtn = document.getElementById("usernameBtn");
@@ -17,8 +17,6 @@
     let messageList = document.getElementById('message-list');
 
     let info = document.querySelector('.info');
-    let typingTimer;
-
 
     messageBtn.addEventListener('click', (e) => {
         console.log(message.value);
@@ -36,21 +34,10 @@
 
     message.addEventListener('keypress', (e) => {
         socket.emit('typing');
-        if (typingTimer) {
-            clearTimeout(typingTimer);
-        }
-        typingTimer = setTimeout(() => {
-            info.textContent = '';
-        }, 1000);
     })
 
     socket.on('typing', data => {
         info.textContent = data.username + " is typing...";
-        if (typingTimer) {
-            clearTimeout(typingTimer);
-        }
-        typingTimer = setTimeout(() => {
-            info.textContent = '';
-        }, 1000);
+        setTimeout(() => { info.textContent = ''; }, 2000);
     })
 })();

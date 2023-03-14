@@ -9,8 +9,8 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-const server = app.listen(process.env.PORT || 3000, () => {
-    console.log('server listening on port 3000');
+const server = app.listen(process.env.PORT || 4000, () => {
+    console.log('server listening on port 4000');
 });
 
 //Initialize socket for the server
@@ -18,6 +18,10 @@ const io = socketio(server);
 
 io.on('connection', socket => {
     console.log('New user connected');
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    })
 
     socket.username = "Anonymous";
 
@@ -30,7 +34,7 @@ io.on('connection', socket => {
         console.log('New message');
         io.sockets.emit("receive_message", { message: data.message, username: socket.username });
     })
-    
+
     socket.on('typing', data => {
         socket.broadcast.emit('typing', { username: socket.username })
     })
